@@ -1,0 +1,105 @@
+# 🚀 CI/CD Pipeline Implementation Plan
+
+This plan outlines how to automate your deployment so that every `git push` to GitHub triggers an automatic update on your home server.
+
+---
+
+## 🛠️ Architecture Overview
+
+The pipeline uses **GitHub Actions** but executes locally on your server using a **Self-Hosted Runner**. This allows GitHub to reach your private server safely without opening any firewall ports.
+
+```mermaid
+graph LR
+    A[Local Code] -->|git push| B(GitHub Repository)
+    B -->|Trigger| C[GitHub Actions]
+    C -->|Task Delivery| D[Self-Hosted Runner]
+    D -->|Commands| E[Home Server]
+    E -->|Restart| F[PM2 Processes]
+```
+
+---
+
+## 📋 Phase 1: Server Preparation
+
+### 1. Install GitHub Self-Hosted Runner
+On your home server, go to your GitHub Repo → **Settings** → **Actions** → **Runners** → **New self-hosted runner**.
+- Select **Windows**.
+- Follow the provided PowerShell commands to download, configure, and install the runner as a service.
+
+### 2. Install PM2 Globally
+Ensure PM2 is installed so the runner can restart your apps:
+```bash
+npm install -g pm2
+```
+
+---
+
+## 🏗️ Phase 2: Workflow Configuration
+
+Create a file at `.github/workflows/deploy.yml` in your repository. This file tells GitHub what to do when you push code.
+
+### Deployment Workflow (Example)
+```yaml
+name: Deploy to Home Server
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Backend
+        run: |
+          cd backend
+          python -m venv venv
+          .\venv\Scripts\activate
+          pip install -r requirements.txt
+          pm2 restart samruddhi-api
+
+      - name: Setup Frontend
+        run: |
+          cd frontend
+          npm install
+          # Inject secrets into build-time env
+          $env:NEXT_PUBLIC_API_URL="${{ secrets.NEXT_PUBLIC_API_URL }}"
+          npm run build
+          pm2 restart samruddhi-web
+```
+
+---
+
+## 🔒 Phase 3: Environment Secrets
+
+Instead of putting passwords in your code, add them to **GitHub Secrets** (Settings → Secrets and variables → Actions):
+
+| Secret Name | Description |
+|-------------|-------------|
+| `DATABASE_URL` | Your full PostgreSQL connection string |
+| `SECRET_KEY` | Your hardened secret key |
+| `NEXT_PUBLIC_API_URL` | `https://api.yourdomain.com` |
+| `SMTP_PASSWORD` | Your email app password |
+
+---
+
+## 🚀 Phase 4: Automated Migrations (Recommended)
+
+To avoid manually updating your database schema, we should add **Alembic**.
+1.  **Init**: `alembic init alembic`
+2.  **Workflow Step**: Add `alembic upgrade head` to your backend deployment step.
+
+---
+
+## ✅ Benefits for Your Business
+
+1.  **Zero Downtime**: PM2 handles the restart in milliseconds.
+2.  **Safety**: If a build fails (e.g., a syntax error), the old version keeps running.
+3.  **Speed**: You focus on code; the server handles the grunt work of building and restarting.
+
+> [!IMPORTANT]
+> **Action Required**: You must install the GitHub Runner on your machine first. Once the runner is "Idle" in your GitHub settings, this pipeline will work immediately.

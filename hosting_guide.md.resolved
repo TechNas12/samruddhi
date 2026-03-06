@@ -1,0 +1,99 @@
+# 🚀 Home Server Hosting Guide — Samruddhi Organics
+
+This guide will walk you through deploying the website on your home server using **PostgreSQL**, **Cloudflare Tunnel**, and **PM2** for process management.
+
+---
+
+## 🏗️ Step 1: Database Setup (PostgreSQL)
+
+Since you are migrating from SQLite to PostgreSQL:
+1.  **Install PostgreSQL**: Download and install PostgreSQL on your home server.
+2.  **Create Database**: Open `pgAdmin` or `psql` and create a new database named `samruddhi`.
+3.  **Get Your Connection String**: It should look like this:
+    `postgresql://username:password@localhost:5432/samruddhi`
+
+---
+
+## 🐍 Step 2: Backend Deployment (FastAPI)
+
+1.  **Virtual Environment**: Create and activate a fresh virtual environment:
+    ```bash
+    cd backend
+    python -m venv venv
+    # Windows:
+    .\venv\Scripts\activate
+    # Linux:
+    source venv/bin/activate
+    ```
+2.  **Install Dependencies**: 
+    ```bash
+    pip install -r requirements.txt
+    ```
+3.  **Configure [.env](file:///c:/Users/dahot/Desktop/workbook/other/samruddhi_organics/backend/.env)**: Make sure your [backend/.env](file:///c:/Users/dahot/Desktop/workbook/other/samruddhi_organics/backend/.env) has these production values:
+    *   `DATABASE_URL`: (Your PostgreSQL string)
+    *   `ALLOWED_ORIGINS`: `https://yourdomain.com,https://api.yourdomain.com`
+    *   `FRONTEND_URL`: `https://yourdomain.com`
+    *   `SECRET_KEY`: (Keep the one I generated for you)
+
+---
+
+## ⚛️ Step 3: Frontend Deployment (Next.js)
+
+1.  **Install Dependencies**:
+    ```bash
+    cd frontend
+    npm install
+    ```
+2.  **Production Build**: This is critical. You must build the static files:
+    ```bash
+    # Set the production API URL before building
+    # Windows (PowerShell):
+    $env:NEXT_PUBLIC_API_URL="https://api.yourdomain.com"; npm run build
+    # Linux/MacOS:
+    NEXT_PUBLIC_API_URL="https://api.yourdomain.com" npm run build
+    ```
+
+---
+
+## 🛡️ Step 4: Process Management (PM2)
+
+Using **PM2** ensures that if your server restarts (e.g., after a power outage), the website starts automatically.
+
+1.  **Install PM2**: `npm install -g pm2`
+2.  **Start Backend**:
+    ```bash
+    cd backend
+    pm2 start "venv/Scripts/python.exe main.py" --name "samruddhi-api"
+    ```
+3.  **Start Frontend**:
+    ```bash
+    cd frontend
+    pm2 start "npm run start" --name "samruddhi-web"
+    ```
+4.  **Save Setup**: `pm2 save` (this persists the list across reboots).
+
+---
+
+## ☁️ Step 5: Connectivity (Cloudflare Tunnel)
+
+Since you already have a tunnel and another site on the same server:
+1.  **One Tunnel, Multiple Hostnames**: You do **not** need a second tunnel. Just add two new **Public Hostnames** to your existing tunnel in the Cloudflare Dashboard:
+    *   **Hostname 1**: `yourdomain.com` → Service: `http://localhost:3000`
+    *   **Hostname 2**: `api.yourdomain.com` → Service: `http://localhost:8000`
+2.  **DNS**: Cloudflare will automatically handle the DNS records for you.
+
+---
+
+## 📋 Final Hosting Checklist
+
+- [ ] **Database**: PostgreSQL is running and the user has `CREATE` permissions.
+- [ ] **Origins**: `ALLOWED_ORIGINS` in [backend/.env](file:///c:/Users/dahot/Desktop/workbook/other/samruddhi_organics/backend/.env) matches your custom domain exactly.
+- [ ] **API URL**: `NEXT_PUBLIC_API_URL` was correctly set during `npm run build`.
+- [ ] **Media**: Ensure the `backend/uploads` folder has write permissions from the Python process.
+- [ ] **Backups**: Set up a simple recurring task to run `pg_dump`:
+    ```bash
+    pg_dump samruddhi > samruddhi_backup.sql
+    ```
+
+> [!TIP]
+> **Check your logs**: If something isn't working, use `pm2 logs` to see real-time errors from both the frontend and backend.

@@ -1,0 +1,30 @@
+name: Deploy Samruddhi Organics
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Backend - Install and Restart
+        run: |
+          cd backend
+          python -m venv venv
+          .\venv\Scripts\activate
+          pip install -r requirements.txt
+          pm2 restart samruddhi-api || pm2 start "venv\Scripts\python.exe main.py" --name "samruddhi-api"
+
+      - name: Frontend - Build and Restart
+        run: |
+          cd frontend
+          npm install
+          # Set build-time env vars from GitHub Secrets
+          $env:NEXT_PUBLIC_API_URL="${{ secrets.NEXT_PUBLIC_API_URL }}"
+          npm run build
+          pm2 restart samruddhi-web || pm2 start "npm start" --name "samruddhi-web"
