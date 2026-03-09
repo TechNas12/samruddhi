@@ -5,7 +5,7 @@ from database import get_db
 import models, schemas
 from auth import require_auth, require_admin
 
-router = APIRouter(prefix="/api/settings", tags=["settings"])
+router = APIRouter(prefix="/settings", tags=["settings"])
 
 @router.get("/{key}", response_model=schemas.SystemSettingOut)
 def get_setting(key: str, db: Session = Depends(get_db)):

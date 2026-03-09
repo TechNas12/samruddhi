@@ -27,13 +27,14 @@ app = FastAPI(
     description="Backend API for Samruddhi Organics e-commerce store",
     version="1.0.0",
     lifespan=lifespan,
+    redirect_slashes=False
 )
 
 
 # CORS middleware
 origins = os.getenv(
     "ALLOWED_ORIGINS", 
-    "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001,http://127.0.0.1:3001"
+    "*"
 ).split(",")
 
 app.add_middleware(

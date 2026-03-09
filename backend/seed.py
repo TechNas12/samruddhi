@@ -38,12 +38,12 @@ def seed():
 
     # ── Categories ──
     categories_data = [
-        {"name": "Composts", "slug": "composts", "description": "Premium organic composts for healthy soil and thriving plants.", "image": "/images/categories/composts.jpg"},
-        {"name": "Fruits", "slug": "fruits", "description": "Fresh, organically grown seasonal fruits straight from the farm.", "image": "/images/categories/fruits.jpg"},
-        {"name": "Foods", "slug": "foods", "description": "Organic food products — grains, spices, and pantry essentials.", "image": "/images/categories/foods.jpg"},
-        {"name": "Compost Liquids", "slug": "compost-liquids", "description": "Nutrient-rich liquid composts for rapid plant growth.", "image": "/images/categories/compost-liquids.jpg"},
-        {"name": "Garden Tools", "slug": "garden-tools", "description": "Essential tools for your urban gardening setup.", "image": "/images/categories/garden-tools.jpg"},
-        {"name": "Seeds", "slug": "seeds", "description": "Heirloom and hybrid seeds for vegetables, herbs, and flowers.", "image": "/images/categories/seeds.jpg"},
+        {"name": "Composts", "slug": "composts", "description": "Premium organic composts for healthy soil and thriving plants.",},
+        {"name": "Fruits", "slug": "fruits", "description": "Fresh, organically grown seasonal fruits straight from the farm.",},
+        {"name": "Foods", "slug": "foods", "description": "Organic food products — grains, spices, and pantry essentials.",},
+        {"name": "Compost Liquids", "slug": "compost-liquids", "description": "Nutrient-rich liquid composts for rapid plant growth.",},
+        {"name": "Garden Tools", "slug": "garden-tools", "description": "Essential tools for your urban gardening setup.",},
+        {"name": "Seeds", "slug": "seeds", "description": "Heirloom and hybrid seeds for vegetables, herbs, and flowers.",},
     ]
     categories = []
     for c in categories_data:
