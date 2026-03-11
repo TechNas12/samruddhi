@@ -38,3 +38,5 @@ backend/uploads/
 .idea/
 *.swp
 *.swo
+\[backend]
+=

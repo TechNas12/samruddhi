@@ -11,17 +11,17 @@ def seed():
     db = SessionLocal()
 
     # Check if already seeded
-    if db.query(User).first():
-        print("Database already has data. Skipping seed.")
-        db.close()
-        return
+    #if db.query(Category).first():
+        #print("Database already has data. Skipping seed.")
+        #db.close()
+        #return
 
     print("Seeding database...")
 
     # ── Users ──
     admin = User(
-        name="Admin",
-        email="admin@samruddhi.com",
+        name="Sanket Dahotre",
+        email="dahotresanket12@gmail.com",
         password_hash=hash_password("admin123"),
         role=UserRole.ADMIN,
         phone="9876543210",
@@ -29,9 +29,9 @@ def seed():
     user = User(
         name="Rahul Sharma",
         email="user@test.com",
-        password_hash=hash_password("user123"),
+        password_hash=hash_password("samruddhi09"),
         role=UserRole.USER,
-        phone="9876543211",
+        phone="9226965735",
     )
     db.add_all([admin, user])
     db.flush()
