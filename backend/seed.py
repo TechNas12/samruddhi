@@ -22,9 +22,9 @@ def seed():
     admin = User(
         name="Sanket Dahotre",
         email="dahotresanket12@gmail.com",
-        password_hash=hash_password("admin123"),
+        password_hash=hash_password("@Sanket12"),
         role=UserRole.ADMIN,
-        phone="9876543210",
+        phone="9834317366",
     )
     user = User(
         name="Rahul Sharma",
