@@ -1,39 +1,62 @@
 # 🚀 Home Server Hosting Guide — Samruddhi Organics
 
-This guide will walk you through deploying the website on your home server using **PostgreSQL**, **Cloudflare Tunnel**, and **PM2** for process management.
+This guide walks you through deploying the website on your home server using **PostgreSQL**, **Cloudflare Tunnel**, **PM2**, and **GitHub Actions CI/CD**.
+
+| Service  | Domain                                    | Local Port |
+|----------|-------------------------------------------|------------|
+| Frontend | `https://www.samruddhiorganics.shop`       | 3000       |
+| Backend  | `https://www.api.samruddhiorganics.shop`   | 8000       |
 
 ---
 
 ## 🏗️ Step 1: Database Setup (PostgreSQL)
 
-Since you are migrating from SQLite to PostgreSQL:
-1.  **Install PostgreSQL**: Download and install PostgreSQL on your home server.
-2.  **Create Database**: Open `pgAdmin` or `psql` and create a new database named `samruddhi`.
-3.  **Get Your Connection String**: It should look like this:
-    `postgresql://username:password@localhost:5432/samruddhi`
+1.  **Install PostgreSQL**:
+    ```bash
+    sudo apt install -y postgresql postgresql-contrib
+    ```
+2.  **Create Database**:
+    ```bash
+    sudo -u postgres psql
+    ```
+    ```sql
+    CREATE USER sanket WITH PASSWORD 'sanket12';
+    CREATE DATABASE samruddhi OWNER sanket;
+    GRANT ALL PRIVILEGES ON DATABASE samruddhi TO sanket;
+    \q
+    ```
+3.  **Connection String**: `postgresql://sanket:sanket12@localhost:5432/samruddhi`
 
 ---
 
 ## 🐍 Step 2: Backend Deployment (FastAPI)
 
-1.  **Virtual Environment**: Create and activate a fresh virtual environment:
+1.  **Virtual Environment**:
     ```bash
     cd backend
-    python -m venv venv
-    # Windows:
-    .\venv\Scripts\activate
-    # Linux:
+    python3 -m venv venv
     source venv/bin/activate
     ```
-2.  **Install Dependencies**: 
+2.  **Install Dependencies**:
     ```bash
     pip install -r requirements.txt
     ```
-3.  **Configure [.env](file:///c:/Users/dahot/Desktop/workbook/other/samruddhi_organics/backend/.env)**: Make sure your [backend/.env](file:///c:/Users/dahot/Desktop/workbook/other/samruddhi_organics/backend/.env) has these production values:
-    *   `DATABASE_URL`: (Your PostgreSQL string)
-    *   `ALLOWED_ORIGINS`: `https://yourdomain.com,https://api.yourdomain.com`
-    *   `FRONTEND_URL`: `https://yourdomain.com`
-    *   `SECRET_KEY`: (Keep the one I generated for you)
+3.  **Configure [backend/.env](file:///c:/Users/dahot/Desktop/workbook/other/samruddhi_organics/backend/.env)**:
+    ```env
+    DATABASE_URL=postgresql://sanket:sanket12@localhost:5432/samruddhi
+    SECRET_KEY=fa6f044def8c5ce94fec6cf43018132d923ee11f139a2818ff1aa61c5461ff77
+    ALLOWED_ORIGINS=https://www.samruddhiorganics.shop,https://www.api.samruddhiorganics.shop,http://localhost:3000
+    FRONTEND_URL=https://www.samruddhiorganics.shop
+
+    SMTP_SERVER=smtp.gmail.com
+    SMTP_PORT=587
+    SMTP_USERNAME=samruddhiorganics12@gmail.com
+    SMTP_PASSWORD=ineefpzysrwltyqr
+    ADMIN_EMAIL=samruddhiorganics12@gmail.com
+    ```
+
+> [!IMPORTANT]
+> `ALLOWED_ORIGINS` must include the exact frontend domain (`https://www.samruddhiorganics.shop`) to prevent CORS errors.
 
 ---
 
@@ -44,56 +67,67 @@ Since you are migrating from SQLite to PostgreSQL:
     cd frontend
     npm install
     ```
-2.  **Production Build**: This is critical. You must build the static files:
+2.  **Production Build** — set the API URL at build time:
     ```bash
-    # Set the production API URL before building
-    # Windows (PowerShell):
-    $env:NEXT_PUBLIC_API_URL="https://api.yourdomain.com"; npm run build
-    # Linux/MacOS:
-    NEXT_PUBLIC_API_URL="https://api.yourdomain.com" npm run build
+    NEXT_PUBLIC_API_URL=https://www.api.samruddhiorganics.shop npm run build
     ```
 
 ---
 
 ## 🛡️ Step 4: Process Management (PM2)
 
-Using **PM2** ensures that if your server restarts (e.g., after a power outage), the website starts automatically.
+PM2 ensures your services auto-restart after power outages or crashes.
 
 1.  **Install PM2**: `npm install -g pm2`
 2.  **Start Backend**:
     ```bash
     cd backend
-    pm2 start "venv/Scripts/python.exe main.py" --name "samruddhi-api"
+    pm2 start "$(pwd)/venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000" --name "samruddhi-api" --cwd "$(pwd)"
     ```
 3.  **Start Frontend**:
     ```bash
     cd frontend
-    pm2 start "npm run start" --name "samruddhi-web"
+    pm2 start "npm run start" --name "samruddhi-web" --cwd "$(pwd)"
     ```
-4.  **Save Setup**: `pm2 save` (this persists the list across reboots).
+4.  **Persist & Auto-Start**:
+    ```bash
+    pm2 save
+    pm2 startup    # Follow the printed sudo command
+    ```
 
 ---
 
 ## ☁️ Step 5: Connectivity (Cloudflare Tunnel)
 
-Since you already have a tunnel and another site on the same server:
-1.  **One Tunnel, Multiple Hostnames**: You do **not** need a second tunnel. Just add two new **Public Hostnames** to your existing tunnel in the Cloudflare Dashboard:
-    *   **Hostname 1**: `yourdomain.com` → Service: `http://localhost:3000`
-    *   **Hostname 2**: `api.yourdomain.com` → Service: `http://localhost:8000`
-2.  **DNS**: Cloudflare will automatically handle the DNS records for you.
+Since you already have a tunnel on the same server:
+1.  **One Tunnel, Multiple Hostnames**: Add two new **Public Hostnames** to your existing tunnel in the Cloudflare Dashboard:
+
+    | Hostname | Service |
+    |---|---|
+    | `www.samruddhiorganics.shop` | `http://localhost:3000` |
+    | `www.api.samruddhiorganics.shop` | `http://localhost:8000` |
+
+2.  **DNS**: Cloudflare handles this automatically.
 
 ---
 
-## 📋 Final Hosting Checklist
+## 🔄 Step 6: CI/CD (Automatic Deploys)
 
-- [ ] **Database**: PostgreSQL is running and the user has `CREATE` permissions.
-- [ ] **Origins**: `ALLOWED_ORIGINS` in [backend/.env](file:///c:/Users/dahot/Desktop/workbook/other/samruddhi_organics/backend/.env) matches your custom domain exactly.
-- [ ] **API URL**: `NEXT_PUBLIC_API_URL` was correctly set during `npm run build`.
-- [ ] **Media**: Ensure the `backend/uploads` folder has write permissions from the Python process.
-- [ ] **Backups**: Set up a simple recurring task to run `pg_dump`:
-    ```bash
-    pg_dump samruddhi > samruddhi_backup.sql
-    ```
+After the first manual deploy, pushes to `master` auto-deploy via `.github/workflows/deploy.yml`.
+
+See [CI/CD Plan](file:///c:/Users/dahot/Desktop/workbook/other/samruddhi_organics/cicd_plan.md.resolved) for full setup instructions.
+
+---
+
+## 📋 Final Checklist
+
+- [ ] PostgreSQL is running with user `sanket` and database `samruddhi`
+- [ ] `ALLOWED_ORIGINS` in [backend/.env](file:///c:/Users/dahot/Desktop/workbook/other/samruddhi_organics/backend/.env) = `https://www.samruddhiorganics.shop,https://www.api.samruddhiorganics.shop,http://localhost:3000`
+- [ ] `NEXT_PUBLIC_API_URL=https://www.api.samruddhiorganics.shop` was set during `npm run build`
+- [ ] `backend/uploads` folder has write permissions
+- [ ] PM2 shows both services running: `pm2 status`
+- [ ] Cloudflare Tunnel hostnames configured for both `www.` domains
+- [ ] GitHub self-hosted runner is "Idle" in repo settings
 
 > [!TIP]
-> **Check your logs**: If something isn't working, use `pm2 logs` to see real-time errors from both the frontend and backend.
+> **Debugging**: `pm2 logs` shows real-time errors from both frontend and backend.
