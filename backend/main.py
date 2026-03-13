@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from database import engine, Base
 from routers import users, products, categories, reviews, cart, wishlist, orders, addresses, admin, carousel, uploads, settings, testimonials
-
+from prometheus_fastapi_instrumentator import Instrumentator
 from contextlib import asynccontextmanager
 
 @asynccontextmanager
@@ -29,6 +29,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+Instrumentator().instrument(app).expose(app)
 
 # CORS middleware
 origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
