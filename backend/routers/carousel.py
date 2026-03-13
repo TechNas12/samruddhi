@@ -10,7 +10,7 @@ from auth import require_admin
 router = APIRouter(prefix="/api/carousel", tags=["Carousel"])
 
 
-@router.get("/", response_model=List[CarouselItemOut])
+@router.get("", response_model=List[CarouselItemOut])
 def get_carousel_items(db: Session = Depends(get_db)):
     """Public endpoint to get active carousel items."""
     items = db.query(CarouselItem).filter(CarouselItem.is_active == True).order_by(CarouselItem.order.asc(), CarouselItem.id.desc()).all()
@@ -24,7 +24,7 @@ def get_all_carousel_items(current_user: User = Depends(require_admin), db: Sess
     return items
 
 
-@router.post("/", response_model=CarouselItemOut, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=CarouselItemOut, status_code=status.HTTP_201_CREATED)
 def create_carousel_item(
     item_in: CarouselItemCreate,
     current_user: User = Depends(require_admin),

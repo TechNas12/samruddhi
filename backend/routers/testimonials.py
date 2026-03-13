@@ -8,7 +8,7 @@ from typing import List
 
 router = APIRouter(prefix="/api/testimonials", tags=["Testimonials"])
 
-@router.get("/", response_model=List[TestimonialOut])
+@router.get("", response_model=List[TestimonialOut])
 def get_featured_testimonials(db: Session = Depends(get_db)):
     """Public endpoint to get featured testimonials for the homepage."""
     return db.query(Testimonial).filter(Testimonial.is_featured == True).order_by(Testimonial.order.asc()).all()
@@ -18,7 +18,7 @@ def get_all_testimonials(admin: User = Depends(require_admin), db: Session = Dep
     """Admin endpoint to list all testimonials."""
     return db.query(Testimonial).order_by(Testimonial.order.asc()).all()
 
-@router.post("/", response_model=TestimonialOut, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=TestimonialOut, status_code=status.HTTP_201_CREATED)
 def create_testimonial(
     data: TestimonialCreate, 
     admin: User = Depends(require_admin), 

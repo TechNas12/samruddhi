@@ -36,8 +36,8 @@ export default function Footer() {
                         <div className="flex flex-col gap-4">
                             <Link href="/products" className="hover:text-white transition-colors text-sm font-medium">All Products</Link>
                             <Link href="/products?category=composts" className="hover:text-white transition-colors text-sm font-medium">Composts</Link>
-                            <Link href="/products?category=seeds" className="hover:text-white transition-colors text-sm font-medium">Seeds</Link>
-                            <Link href="/products?category=garden-tools" className="hover:text-white transition-colors text-sm font-medium">Tools</Link>
+                            <Link href="/products?category=liquid-composts" className="hover:text-white transition-colors text-sm font-medium">Liquid Composts</Link>
+                            <Link href="/products?category=fruits" className="hover:text-white transition-colors text-sm font-medium">Fruits</Link>
                         </div>
                     </div>
 
@@ -58,7 +58,7 @@ export default function Footer() {
                             <div className="flex flex-col gap-4">
                                 <div className="flex items-center gap-3 text-sm">
                                     <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center"><LuMail className="text-green-500" /></div>
-                                    samruddhiorganics@gmail.com
+                                    samruddhiorganics12@gmail.com
                                 </div>
                                 <div className="flex items-center gap-3 text-sm">
                                     <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center"><LuPhone className="text-green-500" /></div>

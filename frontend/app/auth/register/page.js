@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useNotification } from "@/context/NotificationContext";
-import { LuUser, LuMail, LuLock, LuPhone, LuLeaf, LuCheck } from "react-icons/lu";
+import { LuUser, LuMail, LuLock, LuPhone, LuLeaf, LuCheck, LuEye, LuEyeOff } from "react-icons/lu";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -25,6 +25,7 @@ function RegisterContent() {
     const searchParams = useSearchParams();
     const redirect = searchParams.get("redirect") || "/";
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const {
         register,
@@ -116,11 +117,18 @@ function RegisterContent() {
                             <div className="relative">
                                 <LuLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     {...register("password")}
-                                    className={`input-field !pl-10 ${errors.password ? 'border-red-500 focus:ring-red-500' : ''}`}
+                                    className={`input-field !pl-10 !pr-10 ${errors.password ? 'border-red-500 focus:ring-red-500' : ''}`}
                                     placeholder="Min. 6 characters"
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-green-600 transition-colors"
+                                >
+                                    {showPassword ? <LuEyeOff size={20} /> : <LuEye size={20} />}
+                                </button>
                             </div>
                             {errors.password && (
                                 <p className="text-xs text-red-500 mt-1 ml-1">{errors.password.message}</p>

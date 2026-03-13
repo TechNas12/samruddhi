@@ -43,7 +43,7 @@ def list_products(
     max_price: Optional[float] = None,
     min_rating: Optional[int] = None,
     featured: Optional[bool] = None,
-    sort_by: Optional[str] = Query(None, regex="^(price_asc|price_desc|newest|rating)$"),
+    sort_by: Optional[str] = Query(None, pattern="^(price_asc|price_desc|newest|rating)$"),
     skip: int = 0,
     limit: int = 50,
     db: Session = Depends(get_db),

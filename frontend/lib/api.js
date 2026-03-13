@@ -69,7 +69,7 @@ export const api = {
   clearCart: () => request("/api/cart", { method: "DELETE" }),
 
   // Wishlist
-  getWishlist: () => request("/api/wishlist/"),
+  getWishlist: () => request("/api/wishlist"),
   addToWishlist: (data) => request("/api/wishlist", { method: "POST", body: JSON.stringify(data) }),
   removeFromWishlist: (id) => request(`/api/wishlist/${id}`, { method: "DELETE" }),
 

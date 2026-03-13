@@ -135,15 +135,17 @@ export default function AdminCarousel() {
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="flex items-center gap-4 mb-8">
-                <button onClick={() => router.push("/admin")} className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm hover:shadow transition-all text-gray-600">
-                    <LuArrowLeft />
-                </button>
-                <div>
-                    <h1 className="text-2xl font-bold  text-gray-900">Manage Carousel</h1>
-                    <p className="text-gray-500 text-sm">Update the home page hero slides</p>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-8">
+                <div className="flex items-center gap-4">
+                    <button onClick={() => router.push("/admin")} className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm hover:shadow transition-all text-gray-600 shrink-0">
+                        <LuArrowLeft />
+                    </button>
+                    <div>
+                        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Manage Carousel</h1>
+                        <p className="text-gray-500 text-xs sm:text-sm">Update home page hero slides</p>
+                    </div>
                 </div>
-                <button onClick={handleAddNew} className="ml-auto btn-primary py-2 px-4 shadow-sm text-sm">
+                <button onClick={handleAddNew} className="sm:ml-auto btn-primary py-2 px-4 shadow-sm text-sm flex items-center justify-center gap-2">
                     <LuPlus /> Add Slide
                 </button>
             </div>
@@ -220,25 +222,14 @@ export default function AdminCarousel() {
                                     onUpload={(url) => setFormData({ ...formData, image: url })}
                                 />
                             </div>
-                            <div className="grid grid-cols-2 gap-4 md:col-span-2">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Emoji</label>
-                                    <input
-                                        type="text"
-                                        className="input-field"
-                                        value={formData.emoji}
-                                        onChange={(e) => setFormData({ ...formData, emoji: e.target.value })}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Sort Order</label>
-                                    <input
-                                        type="number"
-                                        className="input-field"
-                                        value={formData.order}
-                                        onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
-                                    />
-                                </div>
+                            <div className="md:col-span-2">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Sort Order</label>
+                                <input
+                                    type="number"
+                                    className="input-field"
+                                    value={formData.order}
+                                    onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
+                                />
                             </div>
                         </div>
                         <div className="flex items-center gap-2 mt-4">
@@ -259,7 +250,55 @@ export default function AdminCarousel() {
                 </div>
             ) : null}
 
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            {/* Mobile Card View */}
+            <div className="grid grid-cols-1 gap-4 md:hidden">
+                {items.length === 0 ? (
+                    <div className="bg-white p-8 text-center text-gray-500 rounded-xl border border-gray-100">No carousel slides found.</div>
+                ) : items.map((item) => (
+                    <div key={item.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 space-y-4">
+                        <div className="flex items-start gap-4">
+                            <div className={`w-20 h-16 rounded-lg bg-gradient-to-br ${item.bg_gradient || 'bg-gray-200'} flex items-center justify-center shadow-inner shrink-0 overflow-hidden border border-gray-100`}>
+                                {item.image ? (
+                                    <img src={getImageUrl(item.image)} alt={item.title} className="w-full h-full object-cover" />
+                                ) : (
+                                    <div className="w-full h-full bg-white/20 flex items-center justify-center text-xs text-gray-400 font-bold uppercase">No Image</div>
+                                )}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                                <div className="flex items-center justify-between gap-2 mb-1">
+                                    <span className="text-xs font-medium text-gray-400">Order: {item.order}</span>
+                                    <button
+                                        onClick={() => toggleStatus(item)}
+                                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase border ${item.is_active ? 'bg-green-50 text-green-700 border-green-200' : 'bg-gray-50 text-gray-600 border-gray-200'}`}
+                                    >
+                                        {item.is_active ? 'Active' : 'Inactive'}
+                                    </button>
+                                </div>
+                                <h3 className="font-bold text-gray-900 truncate text-sm">{item.title.replace(/\\n/g, ' ')}</h3>
+                                <p className="text-xs text-gray-500 line-clamp-1">{item.subtitle?.replace(/\\n/g, ' ')}</p>
+                            </div>
+                        </div>
+                        
+                        <div className="flex items-center justify-between pt-3 border-t border-gray-50">
+                            <div className="flex flex-col">
+                                <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">CTA Link</span>
+                                <span className="text-xs text-gray-600 truncate max-w-[150px]">{item.cta_link || 'None'}</span>
+                            </div>
+                            <div className="flex gap-2">
+                                <button onClick={() => handleEdit(item)} className="p-2.5 text-blue-600 bg-blue-50 rounded-lg transition-colors" title="Edit">
+                                    <LuPencil size={18} />
+                                </button>
+                                <button onClick={() => handleDelete(item.id)} className="p-2.5 text-red-500 bg-red-50 rounded-lg transition-colors" title="Delete">
+                                    <LuTrash2 size={18} />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden md:block bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
@@ -279,11 +318,11 @@ export default function AdminCarousel() {
                                 <tr key={item.id} className="hover:bg-gray-50/50 transition-colors">
                                     <td className="p-4 text-gray-500 text-sm">{item.order}</td>
                                     <td className="p-4">
-                                        <div className={`w-16 h-12 rounded bg-gradient-to-br ${item.bg_gradient || 'bg-gray-200'} flex items-center justify-center text-xl shadow-inner overflow-hidden border border-gray-100`}>
+                                        <div className={`w-16 h-12 rounded bg-gradient-to-br ${item.bg_gradient || 'bg-gray-200'} flex items-center justify-center shadow-inner overflow-hidden border border-gray-100`}>
                                             {item.image ? (
                                                 <img src={getImageUrl(item.image)} alt={item.title} className="w-full h-full object-cover" />
                                             ) : (
-                                                <span className="text-xl">{item.emoji}</span>
+                                                <div className="w-full h-full bg-white/20 flex items-center justify-center text-[10px] text-gray-400 font-bold uppercase">No Image</div>
                                             )}
                                         </div>
                                     </td>

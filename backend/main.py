@@ -32,7 +32,7 @@ app = FastAPI(
 Instrumentator().instrument(app).expose(app)
 
 # CORS middleware
-origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+origins = [origin.strip() for origin in os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")]
 
 app.add_middleware(
     CORSMiddleware,

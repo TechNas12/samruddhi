@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { api, getImageUrl } from "@/lib/api";
 import { LuChevronLeft, LuChevronRight, LuStar, LuArrowRight, LuLeaf, LuSprout, LuShieldCheck, LuTruck, LuQuote, LuHeart } from "react-icons/lu";
 import ProductCard from "@/components/ProductCard";
@@ -73,22 +74,35 @@ export default function Home() {
       <div className="relative z-10 bg-gradient-to-b from-transparent via-white/50 to-transparent">
         {/* ── Hero Carousel ── */}
         <section
-          className={`relative min-h-[90vh] flex items-center text-white overflow-hidden transition-all duration-1000 bg-cover bg-center`}
-          style={slide.image ? { backgroundImage: `url(${getImageUrl(slide.image)})` } : { background: `linear-gradient(135deg, #064e3b 0%, #2a9d8f 100%)` }}
+          className={`relative min-h-[90vh] flex items-center text-white overflow-hidden transition-all duration-1000 bg-center`}
         >
+          {/* Background Image / Gradient */}
+          {slide.image ? (
+            <div className="absolute inset-0 z-0">
+              <Image
+                src={getImageUrl(slide.image)}
+                alt={slide.title || "Hero Image"}
+                fill
+                priority
+                className="object-cover transition-opacity duration-1000"
+                sizes="100vw"
+              />
+            </div>
+          ) : (
+            <div
+              className="absolute inset-0 z-0 transition-all duration-1000"
+              style={{ background: `linear-gradient(135deg, #064e3b 0%, #2a9d8f 100%)` }}
+            ></div>
+          )}
+
           {/* Modern Glassy Overlay */}
           <div className="absolute inset-0 bg-black/30 backdrop-brightness-90 z-0"></div>
 
           {/* Decorative Floating Elements */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20 z-0">
-            <div className="absolute top-[10%] left-[5%] text-[180px] blur-sm animate-pulse-slow">🌿</div>
-            <div className="absolute bottom-[10%] right-[5%] text-[140px] blur-sm animate-pulse-slow delay-75">🌱</div>
-          </div>
 
           <div className="max-w-7xl mx-auto px-6 lg:px-8 py-32 relative z-10 w-full">
             <div className="max-w-3xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-bold uppercase tracking-widest mb-8 animate-fade-in-up">
-                <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
                 Samruddhi Organics
               </div>
 
@@ -143,22 +157,22 @@ export default function Home() {
         </section>
 
         {/* ── Trust Badges ── */}
-        <section className="py-12 border-b border-gray-100/50 overflow-hidden">
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="flex flex-wrap justify-around gap-y-8 gap-x-12">
+        <section className="py-10 md:py-16 border-b border-gray-100/50 overflow-hidden">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-12">
               {[
                 { icon: <LuLeaf />, text: "Pure Organic", sub: "Certified sources" },
                 { icon: <LuShieldCheck />, text: "Quality Tested", sub: "Homemade Products" },
                 { icon: <LuTruck />, text: "Direct Delivery", sub: "Farm to door" },
                 { icon: <LuHeart />, text: "Ethical Sourcing", sub: "Local farmers" },
               ].map((b, i) => (
-                <div key={i} className="flex items-center gap-4 group cursor-default">
-                  <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center text-green-600 transition-all duration-300 group-hover:bg-green-600 group-hover:text-white group-hover:rotate-6 shadow-sm border border-gray-100">
-                    <span className="text-2xl">{b.icon}</span>
+                <div key={i} className="flex items-center gap-4 group cursor-pointer transition-all duration-300 hover:-translate-y-1">
+                  <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center text-green-600 transition-all duration-500 group-hover:bg-green-600 group-hover:text-white group-hover:rotate-12 shadow-sm group-hover:shadow-lg group-hover:shadow-green-900/10 border border-gray-100 pointer-events-none">
+                    <span className="text-2xl transition-transform duration-500 group-hover:scale-110">{b.icon}</span>
                   </div>
-                  <div>
-                    <div className="text-gray-900 font-bold tracking-tight">{b.text}</div>
-                    <div className="text-gray-400 text-xs font-medium">{b.sub}</div>
+                  <div className="flex-1 pointer-events-none">
+                    <div className="text-gray-900 font-bold tracking-tight text-sm md:text-base transition-colors group-hover:text-green-800">{b.text}</div>
+                    <div className="text-gray-400 text-[10px] md:text-xs font-medium">{b.sub}</div>
                   </div>
                 </div>
               ))}
@@ -236,15 +250,14 @@ export default function Home() {
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                 />
 
+                {/* Floating Promotional Badge */}
+                <div className="absolute top-8 left-8 bg-white/95 backdrop-blur-md text-[#064e3b] px-8 py-3.5 rounded-full font-black text-sm tracking-widest shadow-2xl z-20 border border-white/50 animate-bounce-subtle">
+                  SAVE 25%
+                </div>
+
                 {/* Bottom Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-100 pointer-events-none"></div>
 
-                {/* Support Icons kept below as requested */}
-                <div className="absolute inset-x-0 bottom-12 flex justify-center gap-6 text-6xl z-10 pointer-events-none">
-                  <span className="hover-lift drop-shadow-2xl filter brightness-110">🌻</span>
-                  <span className="hover-lift delay-75 drop-shadow-2xl filter brightness-110">🥬</span>
-                  <span className="hover-lift delay-150 drop-shadow-2xl filter brightness-110">🍅</span>
-                </div>
               </div>
             </div>
 
@@ -276,15 +289,15 @@ export default function Home() {
         </section>
 
         {/* ── Modern CTA ── */}
-        <section className="px-6 py-20">
-          <div className="max-w-7xl mx-auto bg-[#064e3b] rounded-[40px] overflow-hidden relative min-h-[500px] flex items-center justify-center text-center px-6">
+        <section className="px-6 py-12 md:py-24">
+          <div className="max-w-7xl mx-auto bg-[#064e3b] rounded-[2.5rem] md:rounded-[4rem] overflow-hidden relative min-h-[450px] md:min-h-[500px] flex items-center justify-center text-center px-6 py-16 md:py-0">
             {/* Modern Mesh/Noise Background */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_#10b981,_transparent)] opacity-20"></div>
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_#022c22,_transparent)]"></div>
 
             <div className="relative z-10 max-w-3xl">
-              <h2 className="text-4xl md:text-6xl font-black text-white mb-8  tracking-tight leading-tight">Ready to Start Your<br />Green Masterpiece?</h2>
-              <p className="text-green-100/60 text-lg mb-12 max-w-xl mx-auto font-medium">
+              <h2 className="text-3xl md:text-6xl font-black text-white mb-6 md:mb-8 tracking-tight leading-tight">Ready to Start Your<br />Green Masterpiece?</h2>
+              <p className="text-green-100/70 text-base md:text-lg mb-10 md:mb-12 max-w-xl mx-auto font-medium">
                 Join the urban farming revolution today. We provide the tools, the knowledge, and the love to help you grow.
               </p>
               <div className="flex flex-col sm:flex-row gap-5 justify-center">
@@ -292,7 +305,7 @@ export default function Home() {
                   Shop Now <LuArrowRight />
                 </Link>
                 <Link href="/auth/register" className="px-10 py-5 bg-white/10 text-white rounded-2xl font-black text-sm uppercase tracking-widest border border-white/20 hover:bg-white/20 transition-all backdrop-blur-md flex items-center justify-center">
-                  Launch Account
+                  Create Account
                 </Link>
               </div>
             </div>
