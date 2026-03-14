@@ -11,8 +11,6 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-        with:
-          path: /home/valorant/apps/samruddhi
 
       - name: Backend - Install Dependencies
         run: |
@@ -30,6 +28,5 @@ jobs:
 
       - name: Restart Services
         run: |
-          cd /home/valorant/apps/samruddhi
-          pm2 restart ecosystem.config.js --update-env
+          pm2 restart /home/valorant/apps/samruddhi/ecosystem.config.js --update-env
           pm2 save
