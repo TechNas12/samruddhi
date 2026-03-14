@@ -9,32 +9,11 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      # Save the .env file BEFORE checkout wipes the directory
-      - name: Preserve .env file
-        run: |
-          if [ -f backend/.env ]; then
-            cp backend/.env /tmp/samruddhi-backend.env
-            echo "Saved existing .env to /tmp"
-          elif [ -f /tmp/samruddhi-backend.env ]; then
-            echo ".env already preserved in /tmp from a previous run"
-          else
-            echo "WARNING: No .env file found. You need to manually create it."
-            echo "Run on server: nano $(pwd)/backend/.env"
-            echo "Then re-run this workflow."
-            exit 1
-          fi
-
       - name: Checkout Code
         uses: actions/checkout@v4
-        with:
-          clean: true
-          fetch-depth: 0
 
-      # Restore the .env file AFTER checkout
-      - name: Restore .env file
-        run: |
-          cp /tmp/samruddhi-backend.env backend/.env
-          echo ".env restored successfully"
+      - name: Copy .env from original deployment
+        run: cp /home/valorant/apps/samruddhi/backend/.env backend/.env
 
       - name: Backend - Install Dependencies
         working-directory: ./backend
