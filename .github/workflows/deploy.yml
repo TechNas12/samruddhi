@@ -15,6 +15,12 @@ jobs:
           clean: true
           fetch-depth: 0
 
+      - name: Backend - Copy .env from server
+        run: |
+          # Copy the .env file from a persistent location on the server
+          # so secrets and ALLOWED_ORIGINS are available after fresh checkout
+          cp ~/samruddhi-env/backend.env ./backend/.env
+
       - name: Backend - Install Dependencies
         working-directory: ./backend
         run: |
