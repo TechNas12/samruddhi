@@ -11,28 +11,34 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 0
 
       - name: Backend - Install Dependencies
+        working-directory: ./backend
         run: |
-          cd backend
           python3 -m venv venv || true
           source venv/bin/activate
           pip install -r requirements.txt
 
       - name: Backend - Restart
+        working-directory: ./backend
         run: |
-          cd backend
-          pm2 restart samruddhi-api || pm2 start "$(pwd)/venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000" --name "samruddhi-api" --cwd "$(pwd)"
+          source venv/bin/activate
+          pm2 delete samruddhi-api || true
+          pm2 start "$(pwd)/venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000" --name "samruddhi-api" --cwd "$(pwd)"
           pm2 save
 
       - name: Frontend - Install and Build
+        working-directory: ./frontend
         run: |
-          cd frontend
           npm install
           NEXT_PUBLIC_API_URL=https://api.samruddhiorganics.shop npm run build
 
       - name: Frontend - Restart
+        working-directory: ./frontend
         run: |
-          cd frontend
-          pm2 restart samruddhi-web || pm2 start "npm run start" --name "samruddhi-web" --cwd "$(pwd)"
+          pm2 delete samruddhi-web || true
+          pm2 start "npm run start" --name "samruddhi-web" --cwd "$(pwd)"
           pm2 save
