@@ -25,7 +25,8 @@ jobs:
       - name: Backend - Restart
         working-directory: ./backend
         run: |
-          pm2 restart samruddhi-api || pm2 start "venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000" --name samruddhi-api
+          pm2 delete samruddhi-api || true
+          pm2 start "venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000" --name samruddhi-api
           pm2 save
 
       - name: Frontend - Install and Build
@@ -37,5 +38,6 @@ jobs:
       - name: Frontend - Restart
         working-directory: ./frontend
         run: |
-          pm2 restart samruddhi-web || pm2 start "npm run start" --name samruddhi-web
+          pm2 delete samruddhi-web || true
+          pm2 start "npm run start" --name samruddhi-web
           pm2 save
