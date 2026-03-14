@@ -40,4 +40,4 @@ jobs:
         run: |
           pm2 delete samruddhi-web || true
           pm2 start "npm run start" --name samruddhi-web
-          pm2 save
+          pm2
