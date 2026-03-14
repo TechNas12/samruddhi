@@ -1,21 +1,17 @@
 module.exports = {
-  apps : [{
-    name: 'samruddhi-api',
-    script: 'c:/Users/dahot/Desktop/workbook/other/samruddhi_organics/backend/.venv/Scripts/uvicorn.exe',
-    cwd: 'c:/Users/dahot/Desktop/workbook/other/samruddhi_organics/backend',
-    args: 'main:app --host 0.0.0.0 --port 8000',
-    env: {
-      NODE_ENV: 'production'
+  apps: [
+    {
+      name: "samruddhi-api",
+      script: "/home/valorant/apps/samruddhi/backend/venv/bin/uvicorn",
+      args: "main:app --host 0.0.0.0 --port 8000",
+      cwd: "/home/valorant/apps/samruddhi/backend",
+      interpreter: "none",
     },
-    shell: true
-  }, {
-    name: 'samruddhi-web',
-    script: 'npm.cmd',
-    args: 'run start',
-    cwd: 'c:/Users/dahot/Desktop/workbook/other/samruddhi_organics/frontend',
-    env: {
-      NODE_ENV: 'production'
-    },
-    shell: true
-  }]
-};
+    {
+      name: "samruddhi-web",
+      script: "npm",
+      args: "run start",
+      cwd: "/home/valorant/apps/samruddhi/frontend",
+    }
+  ]
+}
