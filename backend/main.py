@@ -24,7 +24,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="Samruddhi Organics API",
-    description="Backend API for Samruddhi Organics e-commerce store",
+    description="Samruddhi Organics API Site ",
     version="1.0.0",
     lifespan=lifespan,
 )
