@@ -2,8 +2,7 @@ name: Deploy Samruddhi Organics
 
 on:
   push:
-    branches: [ master ]
-
+    branches: [ none ] # disabled pipeline
 jobs:
   deploy:
     runs-on: self-hosted

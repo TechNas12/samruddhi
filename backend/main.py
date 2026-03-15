@@ -32,7 +32,8 @@ app = FastAPI(
 Instrumentator().instrument(app).expose(app)
 
 # CORS middleware
-origins = [origin.strip() for origin in os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")]
+origins_env = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:3001,https://samruddhiorganics.shop,http://samruddhiorganics.shop")
+origins = [origin.strip() for origin in origins_env.split(",") if origin.strip()]
 
 app.add_middleware(
     CORSMiddleware,
