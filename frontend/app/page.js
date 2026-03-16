@@ -250,11 +250,6 @@ export default function Home() {
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                 />
 
-                {/* Floating Promotional Badge */}
-                <div className="absolute top-8 left-8 bg-white/95 backdrop-blur-md text-[#064e3b] px-8 py-3.5 rounded-full font-black text-sm tracking-widest shadow-2xl z-20 border border-white/50 animate-bounce-subtle">
-                  SAVE 25%
-                </div>
-
                 {/* Bottom Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-100 pointer-events-none"></div>
 
