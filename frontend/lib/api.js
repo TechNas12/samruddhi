@@ -101,20 +101,30 @@ export const api = {
 
   // Uploads
   uploadImage: async (file) => {
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    const formData = new FormData();
-    formData.append("file", file);
-    const res = await fetch(`${API_BASE}/api/upload`, {
-      method: "POST",
-      headers: { ...(token && { Authorization: `Bearer ${token}` }) },
-      body: formData,
-    });
-    if (!res.ok) {
-      const error = await res.json().catch(() => ({ detail: "Upload failed" }));
-      throw new Error(error.detail || "Upload failed");
+    const { supabase } = await import("./supabase");
+    
+    // Generate unique filename
+    const ext = file.name.split('.').pop();
+    const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${ext}`;
+    const filePath = `${fileName}`;
+
+    const { data, error } = await supabase.storage
+      .from('samruddhi')
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false
+      });
+
+    if (error) {
+      throw new Error(error.message || "Upload failed");
     }
-    const data = await res.json();
-    return { url: data.url };
+
+    // Get public URL
+    const { data: { publicUrl } } = supabase.storage
+      .from('samruddhi')
+      .getPublicUrl(filePath);
+
+    return { url: publicUrl };
   },
 
   // Settings

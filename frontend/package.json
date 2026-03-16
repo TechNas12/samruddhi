@@ -16,7 +16,8 @@
     "react-dom": "^18",
     "react-hook-form": "^7.71.2",
     "react-icons": "^5.5.0",
-    "zod": "^4.3.6"
+    "zod": "^4.3.6",
+    "@supabase/supabase-js": "^2.48.1"
   },
   "devDependencies": {
     "postcss": "^8",
