@@ -2,6 +2,15 @@ export const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
 export const getImageUrl = (url) => {
   if (!url) return null;
   if (url.startsWith("http")) return url;
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (supabaseUrl) {
+    const cleanUrl = url.startsWith("/") ? url.substring(1) : url;
+    // Map existing 'uploads/' paths or raw filenames to Supabase CDN
+    const filename = cleanUrl.startsWith("uploads/") ? cleanUrl.replace("uploads/", "") : cleanUrl;
+    return `${supabaseUrl}/storage/v1/object/public/${process.env.NEXT_PUBLIC_SUPABASE_BUCKET || 'samruddhi'}/${filename}`;
+  }
+
   return `${API_BASE}${url.startsWith("/") ? "" : "/"}${url}`;
 };
 
@@ -109,7 +118,7 @@ export const api = {
     const filePath = `${fileName}`;
 
     const { data, error } = await supabase.storage
-      .from('samruddhi')
+      .from(process.env.NEXT_PUBLIC_SUPABASE_BUCKET || 'samruddhi')
       .upload(filePath, file, {
         cacheControl: '3600',
         upsert: false
@@ -121,7 +130,7 @@ export const api = {
 
     // Get public URL
     const { data: { publicUrl } } = supabase.storage
-      .from('samruddhi')
+      .from(process.env.NEXT_PUBLIC_SUPABASE_BUCKET || 'samruddhi')
       .getPublicUrl(filePath);
 
     return { url: publicUrl };
