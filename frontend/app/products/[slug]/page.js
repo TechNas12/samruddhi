@@ -137,7 +137,7 @@ export default function ProductPage() {
 
             <div className="grid md:grid-cols-2 gap-12">
                 {/* Product Image Carousel */}
-                <div className="bg-gray-50 rounded-3xl aspect-square relative overflow-hidden group">
+                <div className="bg-gray-50 rounded-3xl h-[350px] md:h-auto md:aspect-square relative overflow-hidden group">
                     <ProductImageCarousel images={product.images} interval={carouselInterval} />
 
                     {product.compare_price && (

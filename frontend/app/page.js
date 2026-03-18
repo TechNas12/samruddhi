@@ -61,6 +61,8 @@ export default function Home() {
   const activeSlides = slides.length > 0 ? slides : [defaultSlide];
   const slide = activeSlides[currentSlide] || activeSlides[0];
 
+  console.log("Hello to the console.");
+
   return (
     <div className="min-h-screen bg-[#fcfcf9] relative overflow-hidden">
       {/* Dynamic Background Blobs */}

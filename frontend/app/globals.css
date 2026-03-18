@@ -254,6 +254,19 @@ html {
 }
 
 /* Prose styles for rendered product descriptions */
+.prose {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+.prose * {
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
 .prose h1 {
   font-size: 1.5rem;
   font-weight: 700;

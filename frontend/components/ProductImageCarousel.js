@@ -47,7 +47,7 @@ export default function ProductImageCarousel({ images = [], interval = 5, showDo
                         <img
                             src={getImageUrl(img)}
                             alt={`Product view ${idx + 1}`}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-contain"
                         />
                     </div>
                 ))}
@@ -62,9 +62,9 @@ export default function ProductImageCarousel({ images = [], interval = 5, showDo
                             e.stopPropagation();
                             prevSlide();
                         }}
-                        className={`absolute left-4 top-1/2 -translate-y-1/2 ${size === "small" ? "p-1.5" : "p-3"} rounded-full bg-white/80 backdrop-blur-md text-gray-800 shadow-lg hover:bg-white hover:scale-110 transition-all z-10 opacity-0 group-hover:opacity-100 border border-gray-100`}
+                        className={`absolute left-3 top-1/2 -translate-y-1/2 ${size === "small" ? "p-1" : "p-2"} rounded-full bg-white/80 backdrop-blur-md text-gray-800 shadow-lg hover:bg-white hover:scale-110 transition-all z-10 opacity-0 group-hover:opacity-100 border border-gray-100`}
                     >
-                        <LuChevronLeft size={size === "small" ? 16 : 24} />
+                        <LuChevronLeft size={size === "small" ? 12 : 20} />
                     </button>
                     <button
                         onClick={(e) => {
@@ -72,16 +72,16 @@ export default function ProductImageCarousel({ images = [], interval = 5, showDo
                             e.stopPropagation();
                             nextSlide();
                         }}
-                        className={`absolute right-4 top-1/2 -translate-y-1/2 ${size === "small" ? "p-1.5" : "p-3"} rounded-full bg-white/80 backdrop-blur-md text-gray-800 shadow-lg hover:bg-white hover:scale-110 transition-all z-10 opacity-0 group-hover:opacity-100 border border-gray-100`}
+                        className={`absolute right-3 top-1/2 -translate-y-1/2 ${size === "small" ? "p-1" : "p-2"} rounded-full bg-white/80 backdrop-blur-md text-gray-800 shadow-lg hover:bg-white hover:scale-110 transition-all z-10 opacity-0 group-hover:opacity-100 border border-gray-100`}
                     >
-                        <LuChevronRight size={size === "small" ? 16 : 24} />
+                        <LuChevronRight size={size === "small" ? 12 : 20} />
                     </button>
                 </>
             )}
 
             {/* Clickable Dots */}
             {images.length > 1 && showDots && (
-                <div className={`absolute ${size === "small" ? "bottom-3" : "bottom-6"} left-1/2 -translate-x-1/2 flex gap-2 z-10`}>
+                <div className={`absolute ${size === "small" ? "bottom-2" : "bottom-4"} left-1/2 -translate-x-1/2 flex gap-1.5 z-10`}>
                     {images.map((_, idx) => (
                         <button
                             key={idx}
@@ -91,9 +91,9 @@ export default function ProductImageCarousel({ images = [], interval = 5, showDo
                                 setCurrentIndex(idx);
                             }}
                             className={`rounded-full transition-all duration-300 ${currentIndex === idx
-                                    ? (size === "small" ? "w-6 bg-green-600" : "w-8 bg-green-600")
-                                    : (size === "small" ? "w-1.5 bg-gray-300/80 hover:bg-white" : "w-3 bg-gray-300/80 hover:bg-white")
-                                } ${size === "small" ? "h-1.5" : "h-3"}`}
+                                    ? (size === "small" ? "w-4 bg-green-600" : "w-6 bg-green-600")
+                                    : (size === "small" ? "w-1 bg-gray-300/80 hover:bg-white" : "w-2 bg-gray-300/80 hover:bg-white")
+                                } ${size === "small" ? "h-1" : "h-2"}`}
                         />
                     ))}
                 </div>

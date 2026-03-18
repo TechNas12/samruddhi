@@ -26,15 +26,15 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-12 md:h-16 transition-all duration-500">
                     {/* Logo */}
-                    <Link href="/" className="flex items-center gap-2 group hover-lift shrink-0">
-                        <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center transition-all duration-500">
+                    <Link href="/" className="flex items-center gap-1.5 sm:gap-2 group hover-lift shrink-0">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center transition-all duration-500">
                             <img
                                 src="/logo.svg"
                                 alt="Samruddhi Organics Logo"
                                 className="w-full h-full object-contain"
                             />
                         </div>
-                        <span className="text-xl md:text-2xl font-black tracking-tight text-green-900">
+                        <span className="text-[17px] sm:text-xl md:text-2xl font-black tracking-tight text-green-900">
                             Samruddhi<span className="text-green-600"> Organics</span>
                         </span>
                     </Link>
@@ -53,7 +53,7 @@ export default function Navbar() {
                     </div>
 
                     {/* Actions */}
-                    <div className="flex items-center gap-4 md:gap-8">
+                    <div className="flex items-center gap-2 sm:gap-4 md:gap-8 shrink-0">
                         <Link href="/cart" className="hidden md:block relative p-1.5 text-gray-700 hover:text-green-700 transition-all hover:scale-110">
                             <LuShoppingCart className="w-5 h-5 md:w-6 md:h-6" />
                             {totalItems > 0 && (
@@ -101,7 +101,7 @@ export default function Navbar() {
                                 )}
                             </div>
                         ) : (
-                            <Link href="/auth/login" className="btn-primary !py-2 md:!py-2.5 !px-5 md:!px-8 !text-[10px] md:!text-xs !bg-[#064e3b] hover:!bg-[#022c22] whitespace-nowrap">
+                            <Link href="/auth/login" className="btn-primary !py-1.5 sm:!py-2 md:!py-2.5 !px-3 sm:!px-5 md:!px-8 !text-[10px] md:!text-xs !bg-[#064e3b] hover:!bg-[#022c22] whitespace-nowrap">
                                 Sign In
                             </Link>
                         )}
