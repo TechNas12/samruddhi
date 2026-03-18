@@ -15,7 +15,7 @@ export default function ProductCard({ product, interval = 5 }) {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <div className="relative aspect-[4/5] bg-gray-50 flex items-center justify-center overflow-hidden">
+            <div className="relative aspect-square bg-gray-50 flex items-center justify-center overflow-hidden">
                 {product.images && product.images.length > 0 ? (
                     <div className="w-full h-full relative">
                         {product.images.length > 1 ? (

@@ -137,7 +137,7 @@ export default function ProductPage() {
 
             <div className="grid md:grid-cols-2 gap-12">
                 {/* Product Image Carousel */}
-                <div className="bg-gray-50 rounded-3xl min-h-[400px] relative overflow-hidden group">
+                <div className="bg-gray-50 rounded-3xl aspect-square relative overflow-hidden group">
                     <ProductImageCarousel images={product.images} interval={carouselInterval} />
 
                     {product.compare_price && (
@@ -178,7 +178,12 @@ export default function ProductPage() {
                     </div>
 
                     {/* Description */}
-                    <p className="text-gray-600 leading-relaxed mb-6">{product.description}</p>
+                    {product.description && (
+                        <div
+                            className="prose prose-sm text-gray-600 mb-6 max-h-96 overflow-y-auto overflow-x-hidden break-words pr-4 custom-scrollbar"
+                            dangerouslySetInnerHTML={{ __html: product.description }}
+                        />
+                    )}
 
                     {/* Stock */}
                     <div className="mb-6">

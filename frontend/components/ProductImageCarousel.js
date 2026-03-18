@@ -57,13 +57,21 @@ export default function ProductImageCarousel({ images = [], interval = 5, showDo
             {images.length > 1 && showArrows && (
                 <>
                     <button
-                        onClick={prevSlide}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            prevSlide();
+                        }}
                         className={`absolute left-4 top-1/2 -translate-y-1/2 ${size === "small" ? "p-1.5" : "p-3"} rounded-full bg-white/80 backdrop-blur-md text-gray-800 shadow-lg hover:bg-white hover:scale-110 transition-all z-10 opacity-0 group-hover:opacity-100 border border-gray-100`}
                     >
                         <LuChevronLeft size={size === "small" ? 16 : 24} />
                     </button>
                     <button
-                        onClick={nextSlide}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            nextSlide();
+                        }}
                         className={`absolute right-4 top-1/2 -translate-y-1/2 ${size === "small" ? "p-1.5" : "p-3"} rounded-full bg-white/80 backdrop-blur-md text-gray-800 shadow-lg hover:bg-white hover:scale-110 transition-all z-10 opacity-0 group-hover:opacity-100 border border-gray-100`}
                     >
                         <LuChevronRight size={size === "small" ? 16 : 24} />
@@ -77,7 +85,11 @@ export default function ProductImageCarousel({ images = [], interval = 5, showDo
                     {images.map((_, idx) => (
                         <button
                             key={idx}
-                            onClick={() => setCurrentIndex(idx)}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setCurrentIndex(idx);
+                            }}
                             className={`rounded-full transition-all duration-300 ${currentIndex === idx
                                     ? (size === "small" ? "w-6 bg-green-600" : "w-8 bg-green-600")
                                     : (size === "small" ? "w-1.5 bg-gray-300/80 hover:bg-white" : "w-3 bg-gray-300/80 hover:bg-white")

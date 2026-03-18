@@ -2,12 +2,27 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { api, getImageUrl } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { useNotification } from "@/context/NotificationContext";
 import { LuPackage, LuPlus, LuPencil, LuTrash2, LuArrowLeft, LuSettings, LuClock } from "react-icons/lu";
 import ImageUploader from "@/components/ImageUploader";
 import ProductImageCarousel from "@/components/ProductImageCarousel";
+import "react-quill-new/dist/quill.snow.css";
+
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
+
+const quillModules = {
+    toolbar: [
+        [{ header: [1, 2, 3, false] }],
+        ["bold", "italic", "underline", "strike"],
+        [{ color: [] }, { background: [] }],
+        [{ list: "ordered" }, { list: "bullet" }],
+        ["blockquote", "link"],
+        ["clean"],
+    ],
+};
 
 export default function AdminProductsPage() {
     const { user, loading: authLoading } = useAuth();
@@ -156,7 +171,15 @@ export default function AdminProductsPage() {
 
                     <div className="space-y-1">
                         <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Detailed Description</label>
-                        <textarea placeholder="Describe the benefits, origin, and usage of this product..." value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="input-field h-24 resize-none" />
+                        <div className="quill-wrapper">
+                            <ReactQuill
+                                theme="snow"
+                                value={form.description}
+                                onChange={(value) => setForm({ ...form, description: value })}
+                                modules={quillModules}
+                                placeholder="Describe the benefits, origin, and usage of this product..."
+                            />
+                        </div>
                     </div>
 
                     <div className="grid sm:grid-cols-4 gap-4">
