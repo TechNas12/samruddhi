@@ -12,6 +12,10 @@ from routers import users, products, categories, reviews, cart, wishlist, orders
 from prometheus_fastapi_instrumentator import Instrumentator
 from contextlib import asynccontextmanager
 
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from rate_limit import limiter
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Create tables on startup
@@ -28,6 +32,9 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan,
 )
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 Instrumentator().instrument(app).expose(app)
 

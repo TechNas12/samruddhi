@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, Request
 from sqlalchemy.orm import Session, joinedload
 from typing import List
 from database import get_db
@@ -6,6 +6,8 @@ from models import Order, OrderItem, CartItem, Product, Address, User, OrderStat
 from schemas import OrderCreate, OrderOut, OrderStatusUpdate
 from auth import require_auth, require_admin
 from utils.email import send_order_emails
+
+from rate_limit import limiter, RATE_LIMITS
 
 router = APIRouter(prefix="/api/orders", tags=["Orders"])
 
@@ -35,7 +37,8 @@ def get_order(order_id: int, user: User = Depends(require_auth), db: Session = D
 
 
 @router.post("", response_model=OrderOut)
-def create_order(data: OrderCreate, background_tasks: BackgroundTasks, user: User = Depends(require_auth), db: Session = Depends(get_db)):
+@limiter.limit(RATE_LIMITS["order"])
+def create_order(request: Request, data: OrderCreate, background_tasks: BackgroundTasks, user: User = Depends(require_auth), db: Session = Depends(get_db)):
     address = db.query(Address).filter(Address.id == data.address_id, Address.user_id == user.id).first()
     if not address:
         raise HTTPException(status_code=404, detail="Address not found")

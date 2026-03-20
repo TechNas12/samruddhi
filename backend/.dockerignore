@@ -1,9 +1,0 @@
-__pycache__
-*.pyc
-.env
-.venv
-venv
-samruddhi.db
-test.db
-uploads/
-.pytest_cache

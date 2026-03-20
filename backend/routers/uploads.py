@@ -1,9 +1,11 @@
 import os
 import uuid
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Request
 from models import User
 from auth import require_admin
 from supabase import create_client, Client
+
+from rate_limit import limiter, RATE_LIMITS
 
 router = APIRouter(prefix="/api/upload", tags=["Uploads"])
 
@@ -25,7 +27,9 @@ MAX_SIZE = 5 * 1024 * 1024  # 5 MB
 
 
 @router.post("")
+@limiter.limit(RATE_LIMITS["upload"])
 async def upload_image(
+    request: Request,
     file: UploadFile = File(...),
     admin: User = Depends(require_admin),
 ):
