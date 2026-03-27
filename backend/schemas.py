@@ -227,6 +227,7 @@ class OrderCreate(BaseModel):
 class OrderOut(BaseModel):
     id: int
     user_id: int
+    user: Optional[UserOut] = None
     status: str
     total: float
     address_id: Optional[int] = None

@@ -41,3 +41,4 @@ backend/uploads/
 *.swo
 \[backend]
 =
+.agent/

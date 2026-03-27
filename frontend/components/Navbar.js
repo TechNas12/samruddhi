@@ -21,13 +21,13 @@ export default function Navbar() {
     }, []);
 
     return (
-        <nav className={`sticky top-0 z-50 transition-all duration-500 bg-gradient-to-r from-[#f0f9f4]/95 via-white/95 to-white/95 backdrop-blur-md border-b border-green-200 ${scrolled ? "py-1.5 shadow-sm" : "py-2.5 md:py-3.5"
+        <nav className={`sticky top-0 z-50 transition-all duration-300 bg-gradient-to-r from-[#f0f9f4]/95 via-white/95 to-white/95 backdrop-blur-md border-b border-green-200 ${scrolled ? "py-1.5 shadow-sm" : "py-2.5 md:py-3.5"
             }`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-12 md:h-16 transition-all duration-500">
+                <div className="flex items-center justify-between h-12 md:h-16 transition-all duration-300">
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-1.5 sm:gap-2 group hover-lift shrink-0">
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center transition-all duration-500">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center transition-all duration-300">
                             <img
                                 src="/logo.svg"
                                 alt="Samruddhi Organics Logo"

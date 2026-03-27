@@ -16,7 +16,8 @@ router = APIRouter(prefix="/api/orders", tags=["Orders"])
 def list_orders(user: User = Depends(require_auth), db: Session = Depends(get_db)):
     query = db.query(Order).options(
         joinedload(Order.items).joinedload(OrderItem.product),
-        joinedload(Order.address)
+        joinedload(Order.address),
+        joinedload(Order.user)
     )
     if user.role.value != "admin":
         query = query.filter(Order.user_id == user.id)
@@ -27,7 +28,8 @@ def list_orders(user: User = Depends(require_auth), db: Session = Depends(get_db
 def get_order(order_id: int, user: User = Depends(require_auth), db: Session = Depends(get_db)):
     order = db.query(Order).options(
         joinedload(Order.items).joinedload(OrderItem.product),
-        joinedload(Order.address)
+        joinedload(Order.address),
+        joinedload(Order.user)
     ).filter(Order.id == order_id).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
@@ -85,7 +87,8 @@ def create_order(request: Request, data: OrderCreate, background_tasks: Backgrou
 
     order = db.query(Order).options(
         joinedload(Order.items).joinedload(OrderItem.product),
-        joinedload(Order.address)
+        joinedload(Order.address),
+        joinedload(Order.user)
     ).filter(Order.id == order.id).first()
 
     # Trigger email notifications in the background
@@ -107,6 +110,7 @@ def update_order_status(order_id: int, data: OrderStatusUpdate, admin: User = De
     db.refresh(order)
     order = db.query(Order).options(
         joinedload(Order.items).joinedload(OrderItem.product),
-        joinedload(Order.address)
+        joinedload(Order.address),
+        joinedload(Order.user)
     ).filter(Order.id == order.id).first()
     return order

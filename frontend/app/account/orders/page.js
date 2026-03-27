@@ -61,9 +61,20 @@ export default function OrdersPage() {
                                     </div>
                                 ))}
                             </div>
-                            <div className="border-t mt-3 pt-3 flex justify-between">
-                                <span className="text-gray-500 text-sm">Total</span>
-                                <span className="font-bold text-green-700">₹{order.total.toFixed(2)}</span>
+                            <div className="border-t mt-3 pt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Shipping To</span>
+                                    <p className="text-sm text-gray-600">
+                                        {order.address?.full_name}<br />
+                                        {order.address?.street}, {order.address?.city}<br />
+                                        {order.address?.state} - {order.address?.pincode}<br />
+                                        Ph: {order.address?.phone}
+                                    </p>
+                                </div>
+                                <div className="text-right flex flex-col justify-end">
+                                    <span className="text-gray-500 text-sm">Total Amount</span>
+                                    <span className="text-xl font-bold text-green-700">₹{order.total.toFixed(2)}</span>
+                                </div>
                             </div>
                         </div>
                     ))}

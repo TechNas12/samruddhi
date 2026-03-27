@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { LuStar, LuArrowRight } from "react-icons/lu";
+import { LuStar, LuArrowRight, LuLeaf } from "react-icons/lu";
 import { getImageUrl } from "@/lib/api";
 import ProductImageCarousel from "./ProductImageCarousel";
 
@@ -11,7 +11,7 @@ export default function ProductCard({ product, interval = 5 }) {
     return (
         <Link
             href={`/products/${product.slug}`}
-            className="product-card group block bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1"
+            className="product-card group block bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
@@ -30,12 +30,14 @@ export default function ProductCard({ product, interval = 5 }) {
                             <img
                                 src={getImageUrl(product.images[0])}
                                 alt={product.name}
-                                className="w-full h-full object-cover transition-transform duration-700 ease-out"
+                                className="w-full h-full object-cover transition-transform duration-300 ease-out"
                             />
                         )}
                     </div>
                 ) : (
-                    <div className="text-7xl group-hover:scale-125 transition-transform duration-700 ease-out">🌿</div>
+                    <div className="text-green-300 opacity-50 group-hover:scale-125 transition-transform duration-300 ease-out">
+                        <LuLeaf size={64} />
+                    </div>
                 )}
 
                 {product.compare_price && (
@@ -51,7 +53,7 @@ export default function ProductCard({ product, interval = 5 }) {
                 )}
 
                 {/* Floating Shadow Overlay on Hover */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
 
             <div className="p-6">
